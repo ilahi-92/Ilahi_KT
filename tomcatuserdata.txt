@@ -1,0 +1,12 @@
+#!/bin/bash
+
+sudo yum install -y
+sudo yum install java-1.8.0-openjdk-devel -y
+sudo wget https://dlcdn.apache.org/tomcat/tomcat-8/v8.5.92/bin/apache-tomcat-8.5.92.tar.gz
+tar -xvf apache-tomcat-8.5.92.tar.gz
+
+
+
+echo 'export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk' >> ~/.bashrc
+
+sudo chown -R ec2-user:ec2-user /opt/tomcat

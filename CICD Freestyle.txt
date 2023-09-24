@@ -1,0 +1,174 @@
+CICD
+
+Install Jenkins
+
+New Job - Github project - Git URL - 
+
+SCM - github url
+
+================================
+
+If private repository - (not required if it is public)
+
+Now Git hub needs access to the EC2 (using ssh) - generate ssh-key (public key give to github)
+
+===========================================
+
+githhub --- setting - ssh and cpg key -- create new key
+
+title : jenkins-project
+
+now github have acccess to ec2
+
+=--------------------==
+
+Go back to jenkins :
+
+add credentials ----  ssh usrneam and privateky
+
+username : instance username - ec2-user
+
+
+private key ---
+
+paste it 
+
+
+====================================
+
+
+/master
+
+-===================
+
+build - now the code will deploy on your ec2 machine 
+
+----------------
+
+Run code - check in git repo
+
+--------------------
+
+sudo apt install docker.io
+
+-------------------
+
+docker base image with node 12
+
+-------------------------------
+
+docker build . -t todo-node-app
+
+you will get error..
+
+permissions : sudo usermod -a -G docker $USER
+
+sudo reboot
+
+
+run again...
+
+docker build . -t todo-node-app
+
+
+sudo reboot
+
+==================
+
+container is create.... now need to run.....
+
+docker ps
+
+docker run -d --name node-todo-app -p 8000:8000 todo-node-app  (-d backround - deamon mode)
+
+docker ps
+
+localhost:8080
+
+docker kill container ID
+
+test
+
+and again 
+
+docker start 35d18c2948c5
+=================================================================================================
+
+now run the code from jenkins......
+
+docker kill cotainer id
+
+check in browser...
+
+
+jenkins--- configure -- 
+
+
+build steps --- 
+
+
+ execute shell ...
+
+docker build . -t node-app-todo
+
+docker run -d --name node-app-container -p 8000:8000 node-app-todo
+
+
+save
+
+build now....
+
+
+error.... permission denied..
+
+chmod 777 /var/lib/jenkins/workspace/todo-node-app
+
+
+now 
+
+sudo usermod -a -G docker jenkins
+
+sudo systemctl restart jenkins
+
+
+build now....
+
+ok.....
+
+success....
+
+go to githubb repo
+
+webhooks -- jenkinsurl /github-webhook/
+
+
+Con : everytime we have to kill container and build - we can use docker composs to fix this
+
+===========================================================================
+
+Docker composs :
+
+
+docker-compose.yml
+
+version : "3.3"
+services :
+  web :
+     build : .
+     ports :
+         - "8000:8000"
+
+
+Install dockercompose - sudo apt-get install docker-compose
+
+docker-compose up -d 
+
+
+docker-compose down
+
+dont use docer run command
+
+use : "docker-compose" down && docker-compose up -d"
+
+
+

@@ -1,0 +1,43 @@
+Enable manager App in Tomcat Server and Give Users and Roles.
+
+cd /opt/tomcat/webapps/manager/META-INF/
+
+Step1
+cd /opt/tomcat/webapps/manager/META-INF/
+vi context.xml
+Before
+<Valve className="org.apache.catalina.valves.RemoteAddrValve"
+         allow="127\.\d+\.\d+\.\d+|::1|0:0:0:0:0:0:0:1" />
+<Manager sessionAttributeValueClassNameFilter="java\.lang\.(?:Boolean|Integer|Long|Number|String)|org\.apache\.catalina\.filters\.CsrfPreventionFilter\$LruCache(?:\$1)?|java\.util\.(?:Linked)?HashMap"/>
+
+After :
+<!--  <Valve className="org.apache.catalina.valves.RemoteAddrValve"
+         allow="127\.\d+\.\d+\.\d+|::1|0:0:0:0:0:0:0:1" />
+<Manager sessionAttributeValueClassNameFilter="java\.lang\.(?:Boolean|Integer|Long|Number|String)|org\.apache\.catalina\.filters\.CsrfPreventionFilter\$LruCache(?:\$1)?|java\.util\.(?:Linked)?HashMap"/> -->
+cd bin/ 
+
+
+./shutdown.sh and ./start.sh 
+
+
+Now go to the browser – click on manger app – It will ask for username and password.
+
+=========================================================================================
+
+Step 2
+[ec2-user@ip-10-0-1-6 ~]$ cd /opt/tomcat/conf/
+[ec2-user@ip-10-0-1-6 conf]$ vi tomcat-users.xml
+-->
+<!--
+  <role rolename="tomcat"/>
+  <role rolename="role1"/>
+  <user username="tomcat" password="<must-be-changed>" roles="tomcat"/>
+  <user username="both" password="<must-be-changed>" roles="tomcat,role1"/>
+  <user username="role1" password="<must-be-changed>" roles="role1"/>
+-->
+  <user username="tomcat" password="tomcat" roles="manager-gui,manager-script"/> just add this line 
+</tomcat-users>
+	Restart tomcat .
+
+
+

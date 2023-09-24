@@ -1,0 +1,46 @@
+communication between 2 hosts
+
+server 1
+
+ssh-key 
+
+cd /home/ec2-user/.ssh
+
+copy content of id_rsa.pub 
+
+go to server 2
+
+
+ssh-keygen
+
+touch authorized_keys
+
+chmod 700 ~/.ssh
+chmod 600 ~/.ssh/authorized_keys
+
+vi authorized key
+
+paste the conent of id_rsa.pub
+
+vice versa 
+
+to check connection : ssh -i /home/ec2-user/.ssh/id_rsa ec2-user@34.228.23.146
+
+to migrate jenkins job
+
+scp -i /home/ec2-user/.ssh/id_rsa -r migrate/ ec2-user@3.90.225.174:/var/lib/jenkins/jobs
+
+sudo chmod -R 777 /var/lib/jenkins/jobs
+
+no go to server 2 on which you are migrating job
+
+manage jenkins - reload configuration from disk 
+
+ok
+
+done
+
+you will see the migrated job
+
+
+

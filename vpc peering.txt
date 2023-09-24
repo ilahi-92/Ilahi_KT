@@ -1,0 +1,23 @@
+vpc peering
+
+region : A
+
+instance : security group - HTTP - SSH - ALL ICMP - TCP Custom (cidr block of region B)
+
+region : B
+
+instance : security group - HTTP - SSH - ALL ICMP - TCP Custom (cidr block of region A)
+
+=================================================
+
+Ping public IP -------
+
+now..... to connect private IP...
+
+Region A --- VPC --- route table - destination (CIDR block of region B) -- target -- peering connection of region B
+
+Region B --- VPC --- route table - destination (CIDR block of region A) -- target -- peering connection of region A
+
+=====================================================
+
+Ping private IP -----

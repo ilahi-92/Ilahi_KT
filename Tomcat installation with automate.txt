@@ -1,0 +1,113 @@
+TOMCAT Installtion on EC2 instance.
+
+Stpes: 
+
+Launch EC2 instance with port access 80 and 8080
+
+1. sudo yum update -y 
+1. Install java - 1.8.0 -  ( sudo yum install java-1.8.0-openjdk-devel -y)
+2. Install tomcat 8 - official tomcat page : https://tomcat.apache.org/download-80.cgi - core  
+3. sudo wget - paste the tomcat 8 url.
+4. tar -xvf version.tar.gz (apache-tomcat-8.5.92.tar.gz)
+5. sudo mv apache**** /opt/tomcat
+6. change owner : sudo chown -R ec2-user:ec2-user /opt/tomcat
+
+7 sudo vi ~/.bashc 
+add the below command
+
+export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk
+
+load the modified file to apply the env variable change 
+
+source ~/.bashrc
+
+8. start tomcat : /opt/tomcat/bin/startup.sh
+
+
+verify : url:8080
+
+========================================
+
+Manual start or stop tomcat 
+
+cd /opt/tomcat/bin
+
+./start or ./shutdown....
+
+=================================================
+
+Automate this by using tomcat.service.
+
+first verify 
+
+sudo systemctl status tomcat it will give you the error 
+[ec2-user@ip-10-0-1-43 bin]$ sudo systemctl status tomcat
+Unit tomcat.service could not be found.
+
+
+Steps
+
+sudo vi /etc/systemd/system/tomcat.service
+
+=====================================================
+
+[Unit]
+Description=Apache Tomcat Web Application Container
+After=syslog.target network.target
+
+[Service]
+Type=forking
+
+Environment=JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk
+Environment=CATALINA_PID=/opt/tomcat/temp/tomcat.pid
+Environment=CATALINA_HOME=/opt/tomcat
+Environment=CATALINA_BASE=/opt/tomcat
+ExecStart=/opt/tomcat/bin/startup.sh
+ExecStop=/opt/tomcat/bin/shutdown.sh
+
+User=ec2-user
+Group=ec2-user
+UMask=0007
+RestartSec=10
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+
+================================================================
+
+
+sudo systemctl daemon-reload
+
+sudo systemctl start tomcat
+sudo systemctl enable tomcat
+
+sudo systemctl status tomcat
+
+
+status will give you error 
+
+Active: activating (auto-restart) ---- 
+
+you need to verfiy if there is any already running process for tocmat : PID
+
+ps - ef | grep tomcat - if running then kill 
+
+sudo kill -9 4855
+
+
+also check if 8080 is listeing on tomcat
+
+sudo netstat -tuln | grep 8080
+
+finally verify
+
+sudo systemctl start tomcat
+
+------------------------------------
+
+
+
+
+
+

@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# Define the XSTREAM_HOME variable if not already set
+XSTREAM_HOME="/path/to/your/XSTREAM_HOME"
+
+# Define an array of commands and corresponding output filenames
+commands=(
+  "./pmt_retry_failed_charge_operation.sh $XSTREAM_HOME default --transactions=112438533900,112438534000,112438534200,112438534300,112438534800"
+  "./pmt_retry_failed_charge_operation.sh $XSTREAM_HOME default --transactions=112438541600,112438542300,112438542400,112438542600,112438542800"
+  "./pmt_retry_failed_charge_operation.sh $XSTREAM_HOME default --transactions=112438544100,112438544200,112438544400,112438544600,112438544800"
+  "./pmt_retry_failed_charge_operation.sh $XSTREAM_HOME default --transactions=112438545100,112438545400,112438545500,112438545900,112438546000"
+  "./pmt_retry_failed_charge_operation.sh $XSTREAM_HOME default --transactions=112438548300,112438548400,112438548800,112438548900,112438549000"
+  # Add more commands here
+)
+
+# Loop through the commands and run them, saving the output to files
+for ((i=0; i<${#commands[@]}; i++)); do
+  command="${commands[i]}"
+  filename="output_$i.txt"
+  echo "Running command: $command"
+  echo "Output saved to: $filename"
+  $command > "$filename" 2>&1
+
+  # Add a 5-minute (300 seconds) delay after every 5 commands
+  if (( (i+1) % 5 == 0 )); then
+    echo "Waiting for 5 minutes..."
+    sleep 300
+  fi
+done
