@@ -1,0 +1,113 @@
+Ansible KT New
+
+Master :
+
+ssh-keygen
+
+Client : 
+
+sudo vi /etc/ssh/sshd_config
+
+PubkeyAuthentication yes
+PasswordAuthentication no
+
+sudo systemctl restart sshd
+
+
+Master :
+
+cd ~/.ssh
+
+ssh-copy-id -i id_rsa.pub ec2-user@34.234.63.42  (ec2-user@client)
+
+
+1. sudo yum install ansible
+
+create file with any name : e.g my_inventory
+
+2. vi my_inventory
+
+[my_group]
+54.226.68.93
+
+Test
+
+ansible -i my_inventory -m ping my_group
+
+===========================================================
+
+Install nginx on remote host :
+
+---
+- name: Install Nginx
+  hosts: my_group
+  tasks:
+    - name: Update package cache
+      apt:
+        update_cache: yes
+
+    - name: Install Nginx
+      apt:
+        name: nginx
+        state: present
+
+
+ansible-playbook -i my_inventory my_playbook.yml
+
+========================================================
+
+above will faile becuase apt is not for redhat and al2 linux linux distro
+
+To make your Ansible playbook more cross-distribution compatible, you can use Ansible's package module to handle package management in a distribution-agnostic way. Here's how you can modify your playbook to use the package module:
+
+
+---
+- name: Install Nginx
+  hosts: web_servers
+  tasks:
+    - name: Ensure the package manager cache is up-to-date
+      package:
+        name: "{{ item }}"
+        state: latest
+      with_items:
+        - nginx  # Name of the package you want to install
+      become: yes  # This ensures the task is run with sudo privileges
+
+ansible-playbook -i my_inventory my_playbook.yml
+==============================================
+
+remote host : 
+
+sudo systemctl status nginx
+
+
+sudo systemctl start nginx
+
+sudo systemctl enable nginx
+
+sudo vi /usr/share/nginx/html/index.html   (modfiy if requried)
+
+test : paste the ip in browser it wil show nginx page
+
+============================================================================
+
+
+
+
+very very important :
+
+if you have launched instance without the key pair then in client machine
+
+sudo vi /etc/ssh/sshd_confg - passwordauthenticaion yes
+
+----- connection method - ec2 connect --- becaseu you dont have key to login from puty
+
+-----------------------------------------------------------------
+
+if you have launched instance with the key pair then - you can connect it from putty 
+
+sudo vi /etc/ssh/sshd_confg - pubkeyauthenticanon yes
+
+==== connection method - ssl client == or putty
+
+
