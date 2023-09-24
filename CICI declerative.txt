@@ -1,0 +1,142 @@
+Declarative :
+
+Senarion :
+
+Code - deploy  --- to server ---- manual deployment.... (code and run on server)
+
+Devops
+
+Automate... (less human effort)
+
+Contineous build test and deploy.... CICD>...
+
+Scenario:...
+
+Developer pushes code to Github....
+
+GIT - DOCKER - DOCKER HUB - JENKINS - AWS....
+
+code -> build -> push (build repo or image (artifactory)) - run pipeline --- EC2...
+
+
+
+git code - > docker build -> push image to docker hub -> deploy on EC2
+
+now jenkins will do automatation.... need to creat pipeline....
+
+Step 1 : install jenkins
+
+Step 2 : Code - github...
+
+notesapp -- https://github.com/ilahi-92/django-notes-app.git
+
+EC2 :
+
+git clone git code
+
+suod  apt-get update
+
+sudo apt install docker.io
+
+docker ps
+
+error : permission denied
+
+whoami
+
+ubuntu... no docker permissio
+
+sudo usermod -aG docker $USER
+
+reboot...
+
+docker ps
+
+check for docker file...
+
+docker build -t notes-app .
+
+Install Jenkins on ec2--- security - 8080
+
+
+
+porcessing trigger for man-db- manual for jenkins in ubuntu....
+
+
+jenkins tool to help cicid -- which needs plugins..
+
+e.g git-- pipleine....
+
+new job-- pipeline...
+
+notes-app-pipeline : name
+
+github project- url :
+
+build triggers : github hook trigger
+
+
+
+try after git clone and build
+
+buiild failed : 
+
+permission denied.
+
+jenkins user is not in docker group
+
+sudo usermod -aG docker jenkins
+
+sudo reboot
+
+
+go to docker hub : push the image
+
+
+ec2 : docker login
+
+username :
+password
+
+login succeeede
+
+login to docker hub using environment variable
+
+jenkins - dashbord - mange jenkins- seucciy - credentials -
+
+system - global crendentials - add credentisl 
+
+username and password
+
+
+
+agent : we can run jobs on other  machine - slave machine ---
+
+jenkins - it will give work to slaves- label
+
+Groovy skeleton :
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,51 @@
+By : Shaik Mohammed Ilahi
+
+Jenkins - Master slave configuration
+
+Master node : install jenkins.
+
+Manage-jenkins-nodes-new node- give name e.g slave
+
+number of executors - selct from 1 to any.. e.g 2
+
+remote root dircotry : select patch : use /opt/build
+
+label : java-build-node (could be anything) --- we will use it while running job
+
+--- save and exit ---
+
+select configured node -- copy links 
+
+curl -sO http://34.235.116.241:8080/jnlpJars/agent.jar
+sudo java -jar agent.jar -jnlpUrl http://34.235.116.241:8080/computer/slave2/jenkins-agent.jnlp -secret cb96ba9c06d975154764fb94adb9d88fda7e1cdc2055abb06e27a20fc35ffb27 -workDir "/opt/build"
+
+Launch slave : just install java
+
+amazon-linux-extras 
+
+sudo amazon-linux-extras install java-openjdk11 
+
+
+paste above curl commands
+
+it will download agent.jar
+
+sudo mv agent.jar /opt/
+
+now go to /opt directoy - paste the remaining command from java -jar...
+
+just give & at the end to run in background...
+
+e.g
+
+sudo java -jar agent.jar -jnlpUrl http://34.235.116.241:8080/computer/slave2/jenkins-agent.jnlp -secret cb96ba9c06d975154764fb94adb9d88fda7e1cdc2055abb06e27a20fc35ffb27 -workDir "/opt/build" &
+
+
+new job -- 
+
+
+
+
+
+
+

@@ -1,0 +1,27 @@
+Jenkins port number change
+
+cd /usr/lib/systemd/system
+
+ls -ltrh *jenkin*
+
+vi jenkins.service
+
+Environmen =8080 - changee it to 9090 
+
+save and exit and make changes in ec2 security group
+
+
+sudo systemctl restart jenkins
+
+sudo systemctl status jenkins
+
+
+==================================
+
+
+sudo vi /etc/sysconfig/jenkins
+
+
+
+
+

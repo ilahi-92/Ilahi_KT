@@ -1,0 +1,274 @@
+CICD pipeline using Groovy syntax / declartive pipeline :
+
+Skeleton Pipeline : groovy syntax
+
+pipeline {
+    agent any
+    
+    stages{
+        stage("code"){
+            steps {
+                echo "cloning the code"
+            }
+        }
+        stage("build"){
+            steps {
+                echo " building the image"
+            }
+        }
+        stage("push to docker hub"){
+            steps {
+                echo "pushing the image to docker hub"
+            }
+        }
+        stage("deploy"){
+            steps {
+                echo "deploying the application on to container"
+            }
+        }
+    }
+}
+
+==============================================================================================================
+
+now - 
+
+groovy syntax for shell command is "sh"
+
+add this step in build and build again
+
+
+sh "docker build -t notes-app ."
+
+
+it wiil faile because of permiision issues : 
+
+sudo usermod -aG docker jenkinns  (docker is group - jenkins is user)
+
+sudo reboot
+
+
+pipeline {
+    agent any
+    
+    stages{
+        stage("Clone Code"){
+            steps {
+                echo "cloning the code"
+                git url:"https://github.com/ilahi-92/django-notes-app.git", branch: "main"
+            }
+        }
+        stage("build"){
+            steps {
+                echo " building the image"
+                sh "docker build -t notes-app ."
+            }
+        }
+        stage("push to docker hub"){
+            steps {
+                echo "pushing the image to docker hub"
+            }
+        }
+        stage("deploy"){
+            steps {
+                echo "deploying the application on to container"
+            }
+        }
+    }
+}
+=========================================================================
+
+now push the image to docker hub
+
+
+ec2 : 
+
+commmand 
+
+docker login
+
+in syntax add in push steps
+
+sh "docker login"
+
+now we need to use groovy special syntax for password
+
+important concetpt : environment : 
+
+docker hub login using env variable : password will not be viisbble
+
+
+withCredentials is groovy syntax
+
+
+
+        stage("push to docker hub"){
+            steps {
+                echo "pushing the image to docker hub"
+                withCredentials([usernamePassword(credentialsId:"dockerHub",passwordVariable:"dockerHubPass",usernameVariable:"dockerHubUser")]){
+                sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPass}"
+                }
+            }
+        }
+
+
+======================================================================
+
+
+ stage("push to docker hub"){
+            steps {
+                echo "pushing the image to docker hub"
+                withCredentials([usernamePassword(credentialsId:"dockerHub",passwordVariable:"dockerHubPass",usernameVariable:"dockerHubUser")]){
+                sh "docker tag notes-app ${env.dockerHubUser}/notes-app:latest"    extra
+                sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPass}"
+                sh "docker push ${env.dockerHubUser}/notes-app:latest" extra
+
+
+downlaod docker compsoe
+
+=======================================================================
+
+
+addded deploy steps:
+
+
+pipeline {
+    agent any
+    
+    stages{
+        stage("Clone Code"){
+            steps {
+                echo "cloning the code"
+                git url:"https://github.com/ilahi-92/django-notes-app.git", branch: "main"
+            }
+        }
+        stage("build"){
+            steps {
+                echo " building the image"
+                sh "docker build -t notes-app ."
+            }
+        }
+        stage("push to docker hub"){
+            steps {
+                echo "pushing the image to docker hub"
+                withCredentials([usernamePassword(credentialsId:"dockerHub",passwordVariable:"dockerHubPass",usernameVariable:"dockerHubUser")]){
+                sh "docker tag notes-app ${env.dockerHubUser}/notes-app:latest"    
+                sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPass}"
+                sh "docker push ${env.dockerHubUser}/notes-app:latest"
+                }
+            }
+        }
+        stage("deploy"){
+            steps {
+                echo "deploying the application on to container"
+                sh "docker run -d -p 8000:8000 shaikilahi/notes-app:latest"
+            }
+        }
+    }
+}
+
+
+===========================================================================
+
+now if you again build it will fail because port 8000 is already in use
+
+so to fix this you need docker compose - 
+
+sudo apt-get install docker-compose
+
+its a file which manges all the docker containers
+
+
+ubuntu@ip-10-0-1-215:~/django-notes-app$ cat docker-compose.yml 
+version : "3.3"
+services :
+  web :
+     build . : 
+     ports :
+         - "8000:8000"
+
+
+docker -compose up -d
+
+if you use the above command it will build the container and 
+
+docker ps
+
+
+docker kill old container
+
+docker-compose up -d
+
+docker-compose down
+
+it will make container up and down....
+
+docker ps
+
+sh "docker-compose down && docker-compose up -d"
+
+
+
+
+in docker-compose file : buil : . will do build in this file only
+
+now, we need to change it to dockerhub location 
+
+image : docker hub link
+
+
+now, create a file name jenkinsfile in git code
+
+copy and paste the groovy script
+
+come to jenkins and select pipeline from smc
+
+give the git url and branch and jenkinsfile name : path...
+
+
+======================================
+
+
+pipeline {
+    agent any
+    
+    stages{
+        stage("Clone Code"){
+            steps {
+                echo "cloning the code"
+                git url:"https://github.com/ilahi-92/django-notes-app.git", branch: "main"
+            }
+        }
+        stage("build"){
+            steps {
+                echo " building the image"
+                sh "docker build -t notes-app ."
+            }
+        }
+        stage("push to docker hub"){
+            steps {
+                echo "pushing the image to docker hub"
+                withCredentials([usernamePassword(credentialsId:"dockerHub",passwordVariable:"dockerHubPass",usernameVariable:"dockerHubUser")]){
+                sh "docker tag notes-app ${env.dockerHubUser}/notes-app:latest"    
+                sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPass}"
+                sh "docker push ${env.dockerHubUser}/notes-app:latest"
+                }
+            }
+        }
+        stage("deploy"){
+            steps {
+                echo "deploying the application on to container"
+                sh "docker-compose down && docker-compose up -d"
+            }
+        }
+    }
+}
+
+
+
+
+
+
+
+
+

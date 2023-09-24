@@ -1,0 +1,225 @@
+Project : Freestyle
+
+Jenkins cicid with githubintegartion --- App deployment on Docker - cicd
+
+Tools
+
+Jenkins
+github
+docker
+
+
+Developer pushes code to github.
+
+As a devops engineer i need to creat a docker file and containerize
+it so that it can run anywhere
+
+in CI way can run anway....
+
+and CD on our EC2....
+
+Launch EC2 -- port 22, 80, 8080
+
+connect ec2--- Install Jenkins....
+
+New item --- freestyyle --- todo-node-app
+
+this is node js todo app...
+
+GIT URL 
+
+SCM : 
+
+https://github.com/ilahi-92/node-todo-cicd.git
+
+
+
+Optional -- or you can just instll git on your ec2
+
+got to ec2 --
+
+ssh-keygen
+
+give publick key to github
+
+githhub --- setting - ssh and cpg key -- create new key
+
+title : jenkins project
+
+paste the key...  ec2 public key....
+
+add key....
+
+=====
+
+give authentication  token....
+
+now github have access to my ec2
+
+=-===================================
+
+
+add credentials ----  ssh usrneam and privateky
+
+username : instance username - ec2-user
+
+
+private key ---
+
+paste it 
+
+-==================================================================
+
+
+build....
+
+it will build and deploy on your ec2
+
+/var/lib/jenkins/jobs/workspace/todoj....ect..
+
+go to githu and check for the steps... given by delveoploer...
+
+sudo apt install nodejs 
+sudo apt install npm
+
+
+node app.js --- it will --- go to security --- inbound : 8000 on whcih app is running...
+
+
+
+localhost:8000
+
+if you exit from node app.js --- the app will get stop.
+
+Now Docker----- we want this app to run anywhre....
+
+inn docker file
+
+5 thins.... - we want this to automate...
+
+
+OS with nodes installed.
+
+copy ...
+
+run ;.... npm install
+
+expose : ....  8000
+
+node app.js
+
+-----------------------------------------
+
+code is having docker file....
+
+we can creae a new docker file....
+
+
+sudo yum install docker
+
+in /var/lib/jenkins/workspace/todo-nodeapp
+sudo vi Dockerfile
+
+google : docker base image with node 12 
+
+FROM node:12.2.0-alpine
+WORKDIR app
+COPY . .
+RUN npm install
+EXPOSE 800
+CMD ["node","app.js"]
+
+now create containe with this dockerfile
+
+docker build . -t todo-node-app
+
+you will get error..
+
+permissions : sudo usermod -a -G docker $USER
+
+sudo reboot
+
+
+run again...
+
+docker build . -t todo-node-app
+
+
+sudo reboot
+
+reload.....
+
+container is create.... now need to run.....
+
+docker ps
+
+docker run -d --name node-todo-app -p 8000:8000 todo-node-app  (-d backround - deamon mode)
+
+docker ps
+
+localhost:8080
+
+docker kill container ID
+
+test
+
+and again 
+
+docker start 35d18c2948c5
+
+
+
+=========================================================
+
+
+now run the code from jenkins......
+
+docker kill cotainer id
+
+check in browser...
+
+
+jenkins--- configure -- 
+
+
+build steps --- 
+
+
+ execute shell ...
+
+docker build . -t node-app-todo
+
+docker run -d --name node-app-container -p 8000:8000 node-app-todo
+
+
+save
+
+build now....
+
+
+error.... permission denied..
+
+chmod 777 /var/lib/jenkins/workspace/todo-node-app
+
+
+now 
+
+sudo usermod -a -G docker jenkins
+
+sudo systemctl restart jenkins
+
+
+build now....
+
+ok.....
+
+success....
+
+go to githubb repo
+
+webhooks -- jenkinsurl /github-webhook/
+
+
+
+
+

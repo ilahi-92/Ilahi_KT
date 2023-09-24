@@ -1,0 +1,90 @@
+Jenkins backup and restore to s3
+
+reason
+
+data protection - protect agains data loss - software or hardware failure
+
+disastary recory - easiy restore
+
+upgrade or migration 
+
+Step 1 : change the password in order to check and verify later
+
+commands
+
+sudo systemctl stop jenkins
+
+systemctl status jenkins
+
+take the backup of jenkins home directory 
+
+var/lib/jenkins
+
+tar -zcvf jenkins-backup.tar.gz /var/lib/jenkins
+
+now we have tar.gz and we have to take the backup to s3 bucket.
+
+aws s3 cp jenkins-backup.tar.gz s3://shaik.ilahi/jenkins-backup.tar.gz 
+
+we need to proivde role this machine.
+
+iam - roles - aws service - ec2 - policy s3 - full acess - role name 
+
+ec2 - action - security - modify - attach iam role
+
+and run the command again 
+
+check in s3 now ....
+
+you will have the backup....
+
+destroy the machine.....
+
+launch ec2 instance name it as restore : 
+
+
+now in user data we have to give jenkins installation script
+
+===============================================
+
+new instnce --
+
+launch jenkins - it will ask for unlock jenkins password 
+
+dont give the password - go back to the new machine and restore from s3
+
+commands
+
+attach iam role : - s3 full access : 
+
+systemctl stop jenkins
+
+restore
+
+aws s3 cp s3://shaik.ilahi/jenkins-backup.tar.gz jenkins-backup.tar.gz
+
+tar is now available
+
+sudo rm  -rf /var/lib/jenkins
+
+sudo tar -zxvf jenkins-backup.tar.gz -C /
+
+start the jenkins :
+
+systemctl start jenkins
+
+refresh jenkins url : it will ask for admin credetials :
+
+use credentials from previous server...
+
+
+
+
+
+
+
+
+
+
+
+

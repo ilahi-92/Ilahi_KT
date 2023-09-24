@@ -1,0 +1,10 @@
+Jenkins plugins handso on
+
+build plugins
+github integration
+maven integration
+
+deploy plugins
+build to container - e.g tomcat
+s3 publisher - repostit artifact to s3 bucket.
+

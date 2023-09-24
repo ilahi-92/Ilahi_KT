@@ -1,0 +1,39 @@
+How to reposit build artifact to s3 ?
+Post build = after build 
+Plugin Required :  s3 Publisher 
+Create s3 bucket with public
+Create iam programmatic user with s3 full access 
+Install plugins – s3 publisher, githhub integration.
+Install maven, git (make users)
+Manage Jenkins – configure systems, S3 profile. Add Jenkins3, access key and secret key. Test.
+Now --- 
+Create maven / freestyle job . git repo url – 
+Goal – clean package – 
+Post build actions – S3 Publisher.
+Source */*.war (location of artifacts) of build in Jenkins.
+S3 bucket name – region – profile.
+Build now – it will complete successfully and reposit to s3.
+Bucket – enable versioning ---- for CI – to show version – 
+
+======================================
+
+IAM user with S3 full access
+
+s3 publisher plugin
+
+configure systems - s3 prfile : - give access key and secret key - test
+
+creat job - 
+
+post build : s3 publisher : 
+
+source */*.war 
+
+bucket name and region 
+
+AKIA3N2752OZCCDN63OG
+46VOSzj5tDT8Q9DsyKYVIrNhJXcH9e+GEQ2WxVHN
+
+
+
+

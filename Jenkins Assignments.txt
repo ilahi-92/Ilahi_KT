@@ -1,0 +1,20 @@
+Jenkins Assignments:
+
+backup - done
+bypass - password reset - 
+port change - done
+migrate job - done
+master slave - done
+docker - done -- need to create doc - ubuntu
+
+sonar cube --- need to work ......
+
+jfrog or nextus ..... need to work .....
+
+
+
+
+
+
+curl -sO http://34.228.7.127:8080/jnlpJars/agent.jar
+java -jar agent.jar -jnlpUrl http://34.228.7.127:8080/computer/slave/jenkins-agent.jnlp -secret 4e2b49103245a889f9c90f427e1303ede4fe0782dea1a9ac31090f2cc2a202c6 -workDir "/opt/build"

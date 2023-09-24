@@ -1,0 +1,24 @@
+Freestyle Project : flexible and simple way to configure and run builds and automation tasks.
+Steps :
+Install git on Jenkins serve (sudo yum install git)
+From ec2 – git – push java code github. ( pom.xml file should be available )
+Install tool – go to Jenkins – mange Jenkins – tools – maven – and name it – e.g., m11 (add maven)
+Install plugin – got to Jenkins – mange Jenkins – plugins – github int and maven int (select install without restart)
+1.Create new item – name – select freestyle –
+prompted for configure –
+SCM : git repo URL : https://github.com/ilahi-92/freestyle.git
+build trigger – Github hook trigger for GITsm polling
+Build environment  - add build steps – invoke maven – select maven tool what we installed –
+goal – clean package – save
+Click on Build – success / failure – take action – check for more information in console output. (click on the job – console output)
+Got to workspace – target – it will show the build file. (.jar or .war etc..) – 
+
+Continues integartion
+2.How to build automatically by using github payload ? (if any changes happen in repo files – jenkins will pull and start building automatically) 
+Steps :
+Got to github – repo – settings – 
+Webhook – add webhook – new – payload : copy: Jenkins url : ip:8080/github-webhook/
+Select event : push 
+Active save
+Jenkins – Configure – build triggers – select - GitHub hook trigger for GITScm polling
+Test : create a file in git repo and Jenkins will automatically take that file and start building.
