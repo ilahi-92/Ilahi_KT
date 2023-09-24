@@ -110,4 +110,9 @@ sudo vi /etc/ssh/sshd_confg - pubkeyauthenticanon yes
 
 ==== connection method - ssl client == or putty
 
+if connecting from local machine like - git bash  
+
+
+then locate the pem file and then do ssh client
+
 
